@@ -16,6 +16,7 @@ data.
 
 import random
 import hashlib
+from typing import Union
 
 from bitcoin.core import (
     # bytes to hex (see x)
@@ -52,7 +53,7 @@ from bitcoin.wallet import (
     P2PKHBitcoinAddress,
 )
 
-def make_address_from_passphrase(passphrase, compressed=True, as_str=True):
+def make_address_from_passphrase(passphrase: Union[bytes, str], compressed=True, as_str=True) -> Union[P2PKHBitcoinAddress, str]:
     """
     Create a Bitcoin address from a passphrase. The passphrase is hashed and
     then used as the secret bytes to construct the CBitcoinSecret.
@@ -78,9 +79,11 @@ def make_txout(amount=None, address=None, counter=None):
 
     if not counter:
         counter = random.randrange(0, 2**50)
+        print(counter)
 
     if not address:
         passphrase = passphrase_template.format(counter=counter)
+        print(passphrase)
         address = make_address_from_passphrase(bytes(passphrase, "utf-8"))
 
     if not amount:

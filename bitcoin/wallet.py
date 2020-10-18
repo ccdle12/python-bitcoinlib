@@ -115,7 +115,7 @@ class CBase58BitcoinAddress(bitcoin.base58.CBase58Data, CBitcoinAddress):
     """A Base58-encoded Bitcoin address"""
 
     @classmethod
-    def from_bytes(cls, data, nVersion):
+    def from_bytes(cls, data: bytes, nVersion: int):
         self = super(CBase58BitcoinAddress, cls).from_bytes(data, nVersion)
 
         if nVersion == bitcoin.params.BASE58_PREFIXES['SCRIPT_ADDR']:
@@ -194,7 +194,7 @@ class P2SHBitcoinAddress(CBase58BitcoinAddress):
 
 class P2PKHBitcoinAddress(CBase58BitcoinAddress):
     @classmethod
-    def from_bytes(cls, data, nVersion=None):
+    def from_bytes(cls, data: bytes, nVersion=None):
         if nVersion is None:
             nVersion = bitcoin.params.BASE58_PREFIXES['PUBKEY_ADDR']
 
@@ -205,7 +205,7 @@ class P2PKHBitcoinAddress(CBase58BitcoinAddress):
         return super(P2PKHBitcoinAddress, cls).from_bytes(data, nVersion)
 
     @classmethod
-    def from_pubkey(cls, pubkey, accept_invalid=False):
+    def from_pubkey(cls, pubkey: bytes, accept_invalid=False):
         """Create a P2PKH bitcoin address from a pubkey
 
         Raises CBitcoinAddressError if pubkey is invalid, unless accept_invalid
@@ -343,7 +343,7 @@ class CKey(object):
     is_compressed - True if compressed
 
     """
-    def __init__(self, secret, compressed=True):
+    def __init__(self, secret: bytes, compressed=True):
         self._cec_key = bitcoin.core.key.CECKey()
         self._cec_key.set_secretbytes(secret)
         self._cec_key.set_compressed(compressed)
@@ -367,14 +367,15 @@ class CBitcoinSecret(bitcoin.base58.CBase58Data, CKey):
     """A base58-encoded secret key"""
 
     @classmethod
-    def from_secret_bytes(cls, secret, compressed=True):
+    def from_secret_bytes(cls, secret: bytes, compressed=True):
         """Create a secret key from a 32-byte secret"""
         self = cls.from_bytes(secret + (b'\x01' if compressed else b''),
                               bitcoin.params.BASE58_PREFIXES['SECRET_KEY'])
+
         self.__init__(None)
         return self
 
-    def __init__(self, s):
+    def __init__(self, s: None):
         if self.nVersion != bitcoin.params.BASE58_PREFIXES['SECRET_KEY']:
             raise CBitcoinSecretError('Not a base58-encoded secret key: got nVersion=%d; expected nVersion=%d' % \
                                       (self.nVersion, bitcoin.params.BASE58_PREFIXES['SECRET_KEY']))

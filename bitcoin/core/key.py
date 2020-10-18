@@ -251,7 +251,6 @@ class ECDSA_SIG_st(ctypes.Structure):
 
 class CECKey:
     """Wrapper around OpenSSL's EC_KEY"""
-
     POINT_CONVERSION_COMPRESSED = 2
     POINT_CONVERSION_UNCOMPRESSED = 4
 

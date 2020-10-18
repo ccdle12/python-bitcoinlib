@@ -38,13 +38,13 @@ class InvalidBase58Error(Base58Error):
     """
     pass
 
-def encode(b):
+def encode(b: bytes) -> str:
     """Encode bytes to a base58-encoded string"""
 
     # Convert big-endian bytes to integer
     n = int('0x0' + binascii.hexlify(b).decode('utf8'), 16)
 
-    # Divide that integer into bas58
+    # Divide that integer into base58
     res = []
     while n > 0:
         n, r = divmod(n, 58)
@@ -101,7 +101,7 @@ class CBase58Data(bytes):
 
     Includes a version and checksum.
     """
-    def __new__(cls, s):
+    def __new__(cls, s: bytes):
         k = decode(s)
         verbyte, data, check0 = k[0:1], k[1:-4], k[-4:]
         check1 = bitcoin.core.Hash(verbyte + data)[:4]
@@ -110,7 +110,7 @@ class CBase58Data(bytes):
 
         return cls.from_bytes(data, _bord(verbyte[0]))
 
-    def __init__(self, s):
+    def __init__(self, s: None):
         """Initialize from base58-encoded string
 
         Note: subclasses put your initialization routines here, but ignore the
@@ -119,8 +119,9 @@ class CBase58Data(bytes):
         """
 
     @classmethod
-    def from_bytes(cls, data, nVersion):
+    def from_bytes(cls, data: bytes, nVersion: int):
         """Instantiate from data and nVersion"""
+        print("asdfadf")
         if not (0 <= nVersion <= 255):
             raise ValueError('nVersion must be in range 0 to 255 inclusive; got %d' % nVersion)
         self = bytes.__new__(cls, data)
